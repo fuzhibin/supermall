@@ -13,6 +13,8 @@ name: "Tabbar"
 <style scoped>
 .tabbar {
   height: 49px;
+  background-color: #fff;
+  box-shadow: 0 -2px 2px rgba(0,0,0,.1);
   position: fixed;
   display: flex;
   left: 0;

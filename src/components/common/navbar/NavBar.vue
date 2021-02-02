@@ -20,6 +20,11 @@ export default {
 
 <style scoped>
 .navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 5;
   display: flex;
   height: 44px;
   text-align: center;
