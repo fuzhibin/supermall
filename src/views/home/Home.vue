@@ -5,17 +5,24 @@
         <span>购物街</span>
       </template>
     </nav-bar>
+    <tab-control :tabtext="['流行','新款','精选']"
+                 @tabCtlClc="tabCtlClc"
+                 :class="{tabctlfix:isFixed}"
+                 ref="tabctl1"
+                 v-show="isFixed"></tab-control>
     <better-scroll class="home-scroll"
                    :probe-type="3"
                    ref="scroll"
                    :pull-up-load="true"
                    @loadMore="loadMore"
                    @scrollpot="updateShow">
-      <home-swiper :banners="banner"></home-swiper>
+      <home-swiper :banners="banner"
+                    @imgLoad="imgLoad"></home-swiper>
       <home-recommend :recommend="recommend"></home-recommend>
       <home-feature ></home-feature>
       <tab-control :tabtext="['流行','新款','精选']"
-                   @tabCtlClc="tabCtlClc"></tab-control>
+                   @tabCtlClc="tabCtlClc"
+                   ref="tabctl2"></tab-control>
       <goods-list :goodlist="goods[goodstype].list"></goods-list>
     </better-scroll>
     <back-top v-show="isShow"
@@ -36,11 +43,14 @@ import HomeFeature from "./childComps/HomeFeature";
 
 
 import {getHomeMultiData,getHomeGoods} from "network/home";
+import {imageLoad} from "@/common/mixin";
 
 export default {
   name: "Home",
   data(){
     return {
+      nowPosition:0,
+      isFixed:false,
       isShow:false,
       goodstype:'pop',
       banner:[],
@@ -49,7 +59,8 @@ export default {
         'pop':{page:0,list:[]},
         'new':{page:0,list:[]},
         'sell':{page:0,list:[]}
-      }
+      },
+      tabctlHeight:0
     }
   },
   components:{
@@ -71,21 +82,30 @@ export default {
     this.getGoodsData('new');
     this.getGoodsData('sell');
   },
+  activated() {
+    this.$refs.scroll.scrollTo(0,-this.nowPosition,0)
+  },
+  deactivated() {
+    this.nowPosition=-this.$refs.scroll.scroll.y;
+  },
+  mixins:[imageLoad],
   methods:{
     loadMore(){
-      this.getGoodsData(this.goodstype)
+      this.getGoodsData(this.goodstype);
+      this.$refs.scroll.finishPullUp();
     },
     homeBackTop(){
-      this.$store.state.vuexScroll.scrollTo(0,0,500)
+      this.$refs.scroll.scrollTo(0,0,500)
     },
     updateShow(position){
       this.isShow=(-position.y)>1000;
+      this.isFixed= (-position.y)>this.tabctlHeight+5
     },
     getMultiData(){
       getHomeMultiData().then(res => {
         this.banner=res.data.banner.list;
         this.recommend=res.data.recommend.list;
-        this.$store.commit('updateScroll',this.$refs.scroll);
+
       })
     },
     getGoodsData(type){
@@ -93,8 +113,8 @@ export default {
       getHomeGoods(type,page).then(res => {
         this.goods[type].list.push(...res.data.list);
         this.goods[type].page++;
-        this.$store.state.vuexScroll.finishPullUp();
       })
+
     },
     tabCtlClc(index){
       switch (index){
@@ -108,6 +128,11 @@ export default {
           this.goodstype='sell';
           break;
       }
+      this.$refs.tabctl1.currentIndex=index
+      this.$refs.tabctl2.currentIndex=index
+    },
+    imgLoad(){
+      this.tabctlHeight=this.$refs.tabctl2.$el.offsetTop;
     }
   }
 }
@@ -130,5 +155,13 @@ export default {
   right: 0;
   top:44px;
   bottom: 49px;
+}
+.tabctlfix  {
+  position: fixed;
+  height: 40px;
+  line-height: 40px;
+  left: 0;
+  right: 0;
+  top: 44px;
 }
 </style>

@@ -36,9 +36,8 @@ props:{
   height: 40px;
   line-height: 40px;
   display: flex;
-  position: sticky;
   background-color: #fff;
-  top: 44px;
+  z-index: 1;
 }
 .tabcontrol-item {
   flex: 1;

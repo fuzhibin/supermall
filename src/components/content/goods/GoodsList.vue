@@ -1,7 +1,8 @@
 <template>
   <div class="goodslist">
     <goods-list-item v-for="item in goodlist"
-                     :goodshow="item"></goods-list-item>
+                     :goodshow="item"
+                      @click.native="gooditem(item.iid)"></goods-list-item>
   </div>
 </template>
 
@@ -19,6 +20,11 @@ export default {
   },
   components:{
     GoodsListItem
+  },
+  methods:{
+    gooditem(goodId){
+      this.$router.push('/goodInfo/'+goodId)
+    }
   }
 }
 </script>

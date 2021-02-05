@@ -39,18 +39,17 @@ export default {
     })
     this.scroll.on('pullingUp',()=>{
       this.$emit('loadMore')
-
     })
   },
   methods:{
     refresh(){
-      this.scroll.refresh();
+      this.scroll && this.scroll.refresh();
     },
     scrollTo(x,y,time=300){
-      this.scroll.scrollTo(x,y,time);
+      this.scroll && this.scroll.scrollTo(x,y,time);
     },
     finishPullUp(){
-      this.scroll.finishPullUp();
+      this.scroll && this.scroll.finishPullUp();
     }
   }
 }

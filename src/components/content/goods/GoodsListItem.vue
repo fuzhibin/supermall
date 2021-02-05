@@ -1,6 +1,6 @@
 <template>
 <div class="gooditem">
-  <img :src="goodshow.show.img" alt="" @load="imgLoad">
+  <img :src="showImg" alt="" @load="imageLoad">
   <p>{{goodshow.title}}</p>
   <div><span class="price">{{goodshow.price}}</span><span class="collent">{{goodshow.cfav}}</span></div>
 </div>
@@ -17,9 +17,14 @@ export default {
       }
     }
   },
+  computed:{
+    showImg(){
+      return this.goodshow.show ? this.goodshow.show.img : this.goodshow.image;
+    }
+  },
   methods:{
-    imgLoad(){
-      this.$store.state.vuexScroll.scroll.refresh();
+    imageLoad(){
+      this.$bus.emit('imageLoad');
     }
   }
 }

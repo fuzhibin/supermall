@@ -4,7 +4,7 @@ const Home = ()=>import('views/home/Home');
 const Category = ()=>import('views/category/Category');
 const Profile = ()=>import('views/profile/Profile');
 const Cart = ()=>import('views/cart/Cart');
-
+const GoodInfo = () => import('views/detail/GoodInfo')
 
 const routes = [{
   path:'',
@@ -21,6 +21,9 @@ const routes = [{
 },{
   path: '/profile',
   component:Profile
+},{
+  path: '/goodInfo/:goodId',
+  component:GoodInfo
 }];
 
 const router = createRouter({
